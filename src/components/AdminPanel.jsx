@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, FileText, Settings, Plus, X, Trash2, Edit2, LogOut, ArrowUp, ArrowDown } from 'lucide-react';
 
-const AdminPanel = () => {
+const AdminPanel = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('news');
   const [newsList, setNewsList] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -330,11 +330,18 @@ const AdminPanel = () => {
           </button>
         </nav>
         
-        <div className="p-4 border-t border-gray-800">
-          <Link to="/" className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 transition-colors">
-            <LogOut className="w-4 h-4" /> View Website
-          </Link>
-        </div>
+        
+          <div className="p-4 border-t border-gray-800 space-y-2">
+            <Link to="/" className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 transition-colors">
+              <ExternalLink className="w-4 h-4" /> View Website
+            </Link>
+            {onLogout && (
+            <button onClick={onLogout} className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-900/30 hover:bg-red-800/50 text-red-400 rounded transition-colors border border-red-900/50">
+              <LogOut className="w-4 h-4" /> Logout
+            </button>
+            )}
+          </div>
+
       </aside>
 
       {/* Main Content */}
