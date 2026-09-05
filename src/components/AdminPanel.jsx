@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, FileText, Settings, Plus, X, Trash2, Edit2, LogOut, ArrowUp, ArrowDown } from 'lucide-react';
 
@@ -32,7 +33,7 @@ const AdminPanel = () => {
 
   const fetchAds = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/ads');
+      const res = await axios.get(`${API_URL}/api/ads`);
       setAdsList(res.data);
     } catch (err) {
       console.error(err);
@@ -42,7 +43,7 @@ const AdminPanel = () => {
   const handleAdSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/ads', adForm);
+      await axios.post(`${API_URL}/api/ads`, adForm);
       setAdForm({ title: '', type: 'in_between_banner', contentUrl: '' });
       fetchAds();
     } catch (err) {
@@ -53,7 +54,7 @@ const AdminPanel = () => {
   const deleteAd = async (id) => {
     if(window.confirm('Are you sure you want to delete this ad?')) {
         try {
-            await axios.delete(`http://localhost:5000/api/ads/${id}`);
+            await axios.delete(`${API_URL}/api/ads/${id}`);
             fetchAds();
         } catch(err) {
             alert('Error deleting ad');
@@ -67,10 +68,10 @@ const AdminPanel = () => {
         // If turning ON a right side ad, turn off all other right side ads first
         const otherActive = adsList.filter(a => a.type === 'right_side_fix' && a.isActive && a._id !== ad._id);
         for (let other of otherActive) {
-          await axios.put(`http://localhost:5000/api/ads/${other._id}`, { isActive: false });
+          await axios.put(`${API_URL}/api/ads/${other._id}`, { isActive: false });
         }
       }
-      await axios.put(`http://localhost:5000/api/ads/${ad._id}`, { isActive: !ad.isActive });
+      await axios.put(`${API_URL}/api/ads/${ad._id}`, { isActive: !ad.isActive });
       fetchAds();
     } catch (err) {
       alert('Error toggling ad status');
@@ -82,7 +83,7 @@ const AdminPanel = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setAdForm({ ...adForm, contentUrl: res.data.url });
@@ -93,7 +94,7 @@ const AdminPanel = () => {
 
   const fetchNews = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/news');
+      const res = await axios.get(`${API_URL}/api/news`);
       setNewsList(res.data);
     } catch (err) {
       console.error(err);
@@ -102,7 +103,7 @@ const AdminPanel = () => {
 
   const fetchSettings = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/settings');
+      const res = await axios.get(`${API_URL}/api/settings`);
       if (res.data) setSettingsForm(res.data);
     } catch (err) {
       console.error(err);
@@ -158,7 +159,7 @@ const AdminPanel = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setNewsImageUrl(res.data.url);
@@ -172,7 +173,7 @@ const AdminPanel = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       updateBlock(id, res.data.url);
@@ -186,7 +187,7 @@ const AdminPanel = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       updateImageInBlock(id, imgIndex, res.data.url);
@@ -200,7 +201,7 @@ const AdminPanel = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const res = await axios.post('http://localhost:5000/api/upload', formData, {
+      const res = await axios.post(`${API_URL}/api/upload`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       setSettingsForm({ ...settingsForm, sidebarAdUrl: res.data.url });
@@ -259,9 +260,9 @@ const AdminPanel = () => {
       };
       
       if (editingNewsId) {
-        await axios.put(`http://localhost:5000/api/news/${editingNewsId}`, payload);
+        await axios.put(`${API_URL}/api/news/${editingNewsId}`, payload);
       } else {
-        await axios.post('http://localhost:5000/api/news', payload);
+        await axios.post(`${API_URL}/api/news`, payload);
       }
       
       resetNewsForm();
@@ -274,7 +275,7 @@ const AdminPanel = () => {
   const deleteNews = async (id) => {
     if(window.confirm('Are you sure you want to delete this news?')) {
         try {
-            await axios.delete(`http://localhost:5000/api/news/${id}`);
+            await axios.delete(`${API_URL}/api/news/${id}`);
             fetchNews();
         } catch(err) {
             alert('Error deleting news');
@@ -285,7 +286,7 @@ const AdminPanel = () => {
   const handleSettingsSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/settings', settingsForm);
+      await axios.post(`${API_URL}/api/settings`, settingsForm);
       alert('Settings updated successfully!');
     } catch (err) {
       alert('Error updating settings');
