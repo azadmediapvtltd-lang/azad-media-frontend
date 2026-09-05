@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from "axios";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 import { BrowserRouter as Router, Routes, Route, useSearchParams } from 'react-router-dom';
 import Header from './components/Header';
 import ArticleContent from './components/ArticleContent';
@@ -26,9 +27,9 @@ const MainLayout = () => {
     const fetchData = async () => {
       try {
         const [newsRes, settingsRes, adsRes] = await Promise.all([
-          axios.get('http://localhost:5000/api/news'),
-          axios.get('http://localhost:5000/api/settings'),
-          axios.get('http://localhost:5000/api/ads')
+          axios.get(`${API_URL}/api/news`),
+          axios.get(`${API_URL}/api/settings`),
+          axios.get(`${API_URL}/api/ads`)
         ]);
         setNewsList(newsRes.data);
         setSettings(settingsRes.data);
