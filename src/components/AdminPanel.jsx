@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, Settings, Plus, X, Trash2, Edit2, LogOut, ArrowUp, ArrowDown } from 'lucide-react';
+import { LayoutDashboard, FileText, Settings, Plus, X, Trash2, Edit2, LogOut, ArrowUp, ArrowDown, ExternalLink } from 'lucide-react';
 
 const AdminPanel = ({ onLogout }) => {
   const [activeTab, setActiveTab] = useState('news');
