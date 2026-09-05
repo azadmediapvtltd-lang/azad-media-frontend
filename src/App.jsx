@@ -6,6 +6,7 @@ import Header from './components/Header';
 import ArticleContent from './components/ArticleContent';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import Login from './components/Login';
 import AdminPanel from './components/AdminPanel';
 import PopupNews from './components/PopupNews';
 import AllNews from './components/AllNews';
@@ -77,13 +78,41 @@ const MainLayout = () => {
   );
 };
 
+
+const ProtectedAdmin = () => {
+  const [token, setToken] = useState(localStorage.getItem('adminToken'));
+  
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
+    }
+  }, [token]);
+
+  if (!token) {
+    return <Login onLogin={setToken} />;
+  }
+  
+  // Intercept 401s to logout
+  axios.interceptors.response.use(response => response, error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('adminToken');
+      setToken(null);
+    }
+    return Promise.reject(error);
+  });
+
+  return <AdminPanel onLogout={() => { localStorage.removeItem('adminToken'); setToken(null); }} />;
+};
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<MainLayout />} />
         <Route path="/all-news" element={<AllNews />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/admin" element={<ProtectedAdmin />} />
       </Routes>
     </Router>
   );
